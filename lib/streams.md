@@ -219,6 +219,7 @@ This is a wrapper around node's `net.Server` object:
 The `options.detectEncoding` option controls how the encoding is sent by the
 `HttpServerRequest` and `HttpClientResponse` constructors.  
 This option can take the following values:
+
 * `strict`: the RFC-2616-7.2.1 rules are applied.
 * `default`: the default algorithm used by streamline v0.4 is used. 
    This algorithm is more lenient and sets the encoding to `utf8` when text content is detected, even
