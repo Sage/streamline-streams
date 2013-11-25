@@ -41,7 +41,7 @@ Two additional functions are provided:
 
 The `lib/transform` directory contains standard transforms that you can use with streamline streams:
 
-* `json-transform`: transforms a JSON text stream into a stream of values.
+* `json-transform`: transforms between a JSON text stream and a stream of values.
 
 For example, you can read from a JSON file, filter its entries and write the output to another JSON file with:
 
