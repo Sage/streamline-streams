@@ -50,7 +50,7 @@ function memorySource(text, chunkSize) {
 			return s;
 		},
 	};
-	return require('streamline-streams/lib/decorator').decorate(stream);
+	return require('streamline-streams/lib/array-api').decorate(stream);
 }
 
 function memorySink() {
