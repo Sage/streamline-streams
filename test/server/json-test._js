@@ -44,7 +44,7 @@ function memorySource(text, chunkSize) {
 	var stream = {
 		read: function(_) {
 			setTimeout(~_, 0);
-			if (pos >= text.length) return null;
+			if (pos >= text.length) return;
 			var s = text.substring(pos, pos + chunkSize);
 			pos += chunkSize;
 			return s;
