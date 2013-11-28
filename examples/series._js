@@ -10,9 +10,8 @@ function powers(n) {
 }
 
 function wait(_, val) {
-	setTimeout(~_, 500);
+	setTimeout(~_, 1000);
 	return val;	
 }
 
-powers(2).skip(3).map(wait).pipe(_, streams.console.log);
-//powers(2).skip(3).limit(20).map(wait).pipe(_, streams.console.log);
+powers(2).skip(3).limit(20).map(wait).buffer(3).pipe(_, streams.console.log);
