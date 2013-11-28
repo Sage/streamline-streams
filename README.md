@@ -12,16 +12,16 @@ See the [low-level API reference](lib/streams.md) for details.
 
 ## Array-like API
 
-Readable streams also support a higher level API which is fully aligned on [streamline's asynchronous array API](https://github.com/Sage/streamlinejs/blob/master/lib/compiler/builtins.md). So you can consume streamline streams just like arrays (except that you cannot index them). 
+Readable streams also support a higher level API which is similar to [streamline's asynchronous array API](https://github.com/Sage/streamlinejs/blob/master/lib/compiler/builtins.md). So you can consume streamline streams like arrays (except that you cannot index them). 
 
 For example, if `stream` is a streamline readable stream wrapper, you can write:
 
 ``` javascript
-stream.map_(_, function(_, elt) {
+stream.map(function(_, elt) {
 	// ...
-}).filter_(_, function(_, elt) {
+}).filter(function(_, elt) {
 	// ...
-}).forEach_(_, function(_, elt) {
+}).forEach(_, function(_, elt) {
 	// ...
 });
 ```
@@ -35,8 +35,8 @@ All the streamline asynchronous array functions are supported except `sort_` and
 Two additional functions are provided:
 
 * `stream.transform(fn)`  
-  inserts an asynchronous transformation into chain. This API is more powerful than `map_` because the transformation function can combine results, split them, etc. The transformation function `fn` is called as `fn(_, reader, writer)` where `reader` is the `stream` to which `transform` is applied, and writer is a writer which is piped into the next element of the chain.
-* `steam.pipe_(_, writer)`  
+  inserts an asynchronous transformation into chain. This API is more powerful than `map` because the transformation function can combine results, split them, etc. The transformation function `fn` is called as `fn(_, reader, writer)` where `reader` is the `stream` to which `transform` is applied, and writer is a writer which is piped into the next element of the chain.
+* `steam.pipe(_, writer)`  
   pipes from `stream` to `writer`.
 
 The `lib/transform` directory contains standard transforms that you can use with streamline streams:
@@ -52,9 +52,9 @@ var jsonTrans = require('streamline/streams/lib/transforms/json');
 var src = new streams.ReadableStream(fs.createReadStream(srcName), { encoding: 'utf8' });
 var dst = new streams.WritableStream(fs.createWriteStream(dstName), { encoding: 'utf8' });
 
-src.transform(jsonTrans.parser()).filter_(_, function(_, elt) {
+src.transform(jsonTrans.parser()).filter(function(_, elt) {
 	return obj.name != null;
-}).transform(jsonTrans.formatter({ space: '\t' })).pipe_(_, dst);
+}).transform(jsonTrans.formatter({ space: '\t' })).pipe(_, dst);
 ```
 
 ## More information

@@ -33,7 +33,7 @@ asyncTest("empty", 1, function(_) {
 asyncTest("mixed data with native node stream", 9, function(_) {
 	var stream = testStream(_, mixedData);
 	var expected = JSON.parse(mixedData);
-	stream.forEach_(_, function(_, elt, i) {
+	stream.forEach(_, function(_, elt, i) {
 		deepEqual(elt, expected[i], expected[i]);
 	});
 	start();
@@ -50,7 +50,7 @@ function memorySource(text, chunkSize) {
 			return s;
 		},
 	};
-	return require('streamline-streams/lib/array-api').decorate(stream);
+	return require('streamline-streams/lib/api').decorate(stream);
 }
 
 function memorySink() {
@@ -70,7 +70,7 @@ function memorySink() {
 asyncTest("fragmented read", 9, function(_) {
 	var stream = memorySource(mixedData, 2).transform(jsonTrans.parser());
 	var expected = JSON.parse(mixedData);
-	stream.forEach_(_, function(_, elt, i) {
+	stream.forEach(_, function(_, elt, i) {
 		deepEqual(elt, expected[i], expected[i]);
 	});
 	start();
@@ -78,9 +78,9 @@ asyncTest("fragmented read", 9, function(_) {
 
 asyncTest("roundtrip", 11, function(_) {
 	var sink = memorySink();
-	testStream(_, mixedData).map_(_, function(_, elt) {
+	testStream(_, mixedData).map(function(_, elt) {
 		return (elt && elt.lastName) ? elt.lastName : elt;
-	}).transform(jsonTrans.formatter()).pipe_(_, sink);
+	}).transform(jsonTrans.formatter()).pipe(_, sink);
 	var result = JSON.parse(sink.toString());
 	var expected = JSON.parse(mixedData).map(function(elt) {
 		return (elt && elt.lastName) ? elt.lastName : elt;

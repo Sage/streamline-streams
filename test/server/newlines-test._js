@@ -24,7 +24,7 @@ function memorySource(text, chunkSize) {
 			return s;
 		},
 	};
-	return require('streamline-streams/lib/array-api').decorate(stream);
+	return require('streamline-streams/lib/api').decorate(stream);
 }
 
 function memorySink() {
@@ -40,7 +40,7 @@ function memorySink() {
 		},
 	};
 }
-/*
+
 asyncTest("empty", 2, function(_) {
 	var stream = testStream(_, '');
 	strictEqual(stream.read(_), '', "empty line");
@@ -64,12 +64,12 @@ asyncTest("empty", 5, function(_) {
 	strictEqual(stream.read(_), 'ghi', 'ghi');
 	strictEqual(stream.read(_), undefined, "undefined");
 	start();
-});*/
+});
 
 asyncTest("roundtrip", 1, function(_) {
 	var sink = memorySink();
 	var text = 'abc\n\ndef\nghi';
-	memorySource(text, 2).transform(newlines.parser()).transform(newlines.formatter()).pipe_(_, sink);
+	memorySource(text, 2).transform(newlines.parser()).transform(newlines.formatter()).pipe(_, sink);
 	strictEqual(sink.toString(), text, text);
 	start();
 });
