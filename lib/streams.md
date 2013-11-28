@@ -227,3 +227,12 @@ This option can take the following values:
 * `disable`: null is always returned and the stream is always handled in binary mode (buffers rather than strings).
 * a function. This is a hook for custom encoding detection. 
   The function is called as `fn(headers)` and returns the encoding.
+
+## Special streams
+
+* `streams.empty`  
+  the empty stream. `empty.read(_)` returns `undefined`.
+* `streams.stdin(encoding)`  
+* `streams.stdout`  
+* `streams.stderr`  
+  wrappers for standard streams
