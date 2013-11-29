@@ -10,9 +10,9 @@ The low-level API provides
 
 See the [low-level API reference](lib/streams.md) for details.
 
-## Array-like API
+## High-level functional API
 
-Readable streams also support a higher level API which is similar to [streamline's asynchronous array API](https://github.com/Sage/streamlinejs/blob/master/lib/compiler/builtins.md). So you can consume streamline streams like arrays (except that you cannot index them). 
+Readable streams also support a higher level, functional API which is similar to [streamline's asynchronous array API](https://github.com/Sage/streamlinejs/blob/master/lib/compiler/builtins.md). So you can consume streamline streams like arrays, with the gotcha that some operations like direct indexing or sorting are not supported on streams. 
 
 For example, if `stream` is a streamline readable stream wrapper, you can write:
 
@@ -28,16 +28,11 @@ stream.map(function(_, elt) {
 
 Note that these functions return streams rather than arrays, so that you get lazy evaluation through the whole chain.
 
-All the streamline asynchronous array functions are supported except `sort_` and `reduceRight_` because these two functions cannot be implemented without buffering the whole stream.
+This API provides methods like `transform`, `pipe`, `limit`, `buffer`, ... that let you build powerful chains with streams. See the [API reference](https://github.com/Sage/streamline-streams/blob/master/lib/api.md) for details.
 
 ## Transform and pipe
 
 Two additional functions are provided:
-
-* `stream.transform(fn)`  
-  inserts an asynchronous transformation into chain. This API is more powerful than `map` because the transformation function can combine results, split them, etc. The transformation function `fn` is called as `fn(_, reader, writer)` where `reader` is the `stream` to which `transform` is applied, and writer is a writer which is piped into the next element of the chain.
-* `steam.pipe(_, writer)`  
-  pipes from `stream` to `writer`.
 
 The `lib/transform` directory contains standard transforms that you can use with streamline streams:
 
