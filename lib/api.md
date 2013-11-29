@@ -29,7 +29,7 @@
   The `fn` function is called as `fn(_, current, elt)` where `current` is `initial` on the first entry and
   the result of the previous `fn` call otherwise.
   Returns the value returned by the last `fn` call.
-* `steam.pipe(_, writer)`  
+* `count = stream.pipe(_, writer)`  
   Pipes from `stream` to `writer`.
   Returns the numer of entries that have been piped.
 * `stream = stream.buffer(count)`  
@@ -38,7 +38,7 @@
   The usual effect is to speed up processing, at the expense of the extra memory used 
   to maintain a window of `count` entries in memory. 
   Returns another stream on which other operations may be chained.
-* `steram = stream.transform(fn)`  
+* `stream = stream.transform(fn)`  
   Inserts an asynchronous transformation into chain.  
   This API is more powerful than `map` because the transformation function can combine results, split them, etc.  
   The transformation function `fn` is called as `fn(_, reader, writer)`
@@ -56,7 +56,7 @@
   The `fn` function is called as `fn(_, elt, i)`.  
   Returns another stream on which other operations may be chained.
 * `result = stream.limit(count)`  
-  Limits the steam to product `count` results.  
+  Limits the stream to produce `count` results.  
   Returns another stream on which other operations may be chained.
 * `result = stream.skip(count)`  
   Skips the first `count` entries of the stream.  

@@ -28,15 +28,14 @@ stream.map(function(_, elt) {
 
 Note that these functions return streams rather than arrays, so that you get lazy evaluation through the whole chain.
 
-This API provides methods like `transform`, `pipe`, `limit`, `buffer`, ... that let you build powerful chains with streams. See the [API reference](https://github.com/Sage/streamline-streams/blob/master/lib/api.md) for details.
+This API provides methods like `transform`, `pipe`, `limit`, `buffer`, ... that let you build powerful chains with streams. See the [High-level API reference](lib/api.md) for details.
 
-## Transform and pipe
-
-Two additional functions are provided:
+## Transforms
 
 The `lib/transform` directory contains standard transforms that you can use with streamline streams:
 
-* `json-transform`: transforms between a JSON text stream and a stream of values.
+* [`json-transform`](lib/stransforms/json.md): transforms between a JSON text stream and a stream of values.
+* [`newlines`](lib/stransforms/newlines.md): transforms between a plain text stream and a stream of lines.
 
 For example, you can read from a JSON file, filter its entries and write the output to another JSON file with:
 

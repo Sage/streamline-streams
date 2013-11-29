@@ -1,4 +1,4 @@
-Stream transforms for simple JSON streams
+Stream transform for simple JSON streams
 
 ## "Simple" JSON streams
 
