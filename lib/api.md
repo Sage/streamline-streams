@@ -32,12 +32,6 @@
 * `count = stream.pipe(_, writer)`  
   Pipes from `stream` to `writer`.
   Returns the numer of entries that have been piped.
-* `stream = stream.buffer(count)`  
-  Bufferizes `count` results by letting `count` read operations progress
-  in parallel upstream.  
-  The usual effect is to speed up processing, at the expense of the extra memory used 
-  to maintain a window of `count` entries in memory. 
-  Returns another stream on which other operations may be chained.
 * `stream = stream.transform(fn)`  
   Inserts an asynchronous transformation into chain.  
   This API is more powerful than `map` because the transformation function can combine results, split them, etc.  
