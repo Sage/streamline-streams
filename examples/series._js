@@ -10,7 +10,7 @@ function numbers() {
 }
 
 function wait(_, val) {
-	setTimeout(~_, 200);
+	setTimeout(~_, 1000);
 	return val;
 }
 
@@ -30,7 +30,11 @@ function minJoiner(_, values) {
 
 //numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
 
-numbers().fork([
+/*numbers().fork([
 	function(source) { return source.map(pow(2)).limit(4); },
 	function(source) { return source.map(pow(3)); },
-]).rr().map(wait).limit(30).pipe(_, streams.console.log);
+]).rr().map(wait).limit(30).pipe(_, streams.console.log);*/
+
+numbers().parallelize(5, function(source) {
+	return source.map(pow(2)).map(wait);
+}).limit(30).pipe(_, streams.console.log);
