@@ -28,4 +28,4 @@ function minJoiner(_, values) {
 	return min;
 }
 
-numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).dequeue().map(wait).limit(20).pipe(_, streams.console.log);
+numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
