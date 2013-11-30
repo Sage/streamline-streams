@@ -28,4 +28,9 @@ function minJoiner(_, values) {
 	return min;
 }
 
-numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
+//numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
+
+numbers().fork([
+	function(source) { return source.map(pow(2)).limit(4); },
+	function(source) { return source.map(pow(3)); },
+]).rr().map(wait).limit(30).pipe(_, streams.console.log);
