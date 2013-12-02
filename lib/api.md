@@ -67,7 +67,7 @@
   had its own copy of the stream as input.  
   `consumers` is an array of functions with the following signature: `stream = consumer(source)`
   Returns a `StreamGroup` on which other operations can be chained.
-* `group = stream.parallelize(count, consumer)`  
+* `group = stream.parallel(count, consumer)`  
   Parallelizes by distributing the values to a set of  `count` identical consumers.  
   `count` is the number of consumers that will be created.  
   `consumer` is a function with the following signature: `stream = consumer(source)`  

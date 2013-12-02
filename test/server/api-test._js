@@ -153,6 +153,36 @@ asyncTest("skip", 1, function(_) {
 	start();
 });
 
+function pow(n) {
+	return function(_, val) {
+		return Math.pow(val, n);
+	}
+}
+
+function wait(millis) {
+	return function(_, val) {
+		var ms = typeof millis === "function" ? millis() : millis;
+		setTimeout(~_, ms)
+		return val;
+	}
+}
+
+function rand(min, max) {
+	return function() {
+		return min + Math.round(Math.random() * (max - min));
+	};
+}
+
+asyncTest("parallel", 1, function(_) {
+	var t0 = Date.now();
+	strictEqual(numbers().limit(10).parallel(4, function(source) {
+		return source.map(wait(rand(0, 100))).map(pow(2));
+	}).pipe(_, arraySink()).toArray().join(','), "0,1,4,9,16,25,36,49,64,81");
+	var dt = Date.now() - t0;
+	//ok(dt < 600, "elapsed: " + dt + "ms");
+	start();
+});
+
 /*
 //numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
 numbers().fork([
