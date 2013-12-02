@@ -1,7 +1,7 @@
 "use strict";
+QUnit.module(module.id);
 
 var streams = require('streamline-streams');
-var output = require('streamline.streams/lib/xlets/console').log;
 
 function numbers() {
 	var i = 0;
@@ -10,9 +10,11 @@ function numbers() {
 	});
 }
 
-function wait(_, val) {
-	setTimeout(~_, 1000);
-	return val;
+function waiter(ms) {
+	return function wait(_, val) {
+		setTimeout(~_, ms);
+		return val;
+	}
 }
 
 function pow(n) {
@@ -29,13 +31,18 @@ function minJoiner(_, values) {
 	return min;
 }
 
-//numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
+asyncTest("dummy", 1, function(_) {
+	ok(true);
+});
 
-/*numbers().fork([
+/*
+//numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
+numbers().fork([
 	function(source) { return source.map(pow(2)).limit(4); },
 	function(source) { return source.map(pow(3)); },
-]).rr().map(wait).limit(30).pipe(_, streams.console.log);*/
+]).rr().map(wait).limit(30).pipe(_, streams.console.log);
 
 numbers().parallelize(5, function(source) {
 	return source.map(pow(2)).map(wait);
-}).limit(30).pipe(_, output);
+}).limit(30).pipe(_, streams.console.log);
+*/

@@ -240,9 +240,3 @@ This option can take the following values:
 * `streams.empty`  
   The empty stream. `empty.read(_)` returns `undefined`.
   It is also a null sink. You can write to it but nothing happens
-* `streams.console`  
-  wrappers for console streams 
-* `streams.stdin(encoding)`  
-* `streams.stdout(encoding)`  
-* `streams.stderr(encoding)`  
-  wrappers for standard streams

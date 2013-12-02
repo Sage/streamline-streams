@@ -56,11 +56,31 @@
   Skips the first `count` entries of the stream.  
   Returns another stream on which other operations may be chained.
 * `result = stream.join(others, fn, thisObj)`  
-  Joins `stream` with one or more other streams.  
-  `others` may be a single stream or an array of streams.  
+  Joins `stream` with one or more other streams. 
+  Returns a `StreamGroup` on which other operations can be chained. 
+* `group = stream.fork(consumers)`  
+  Forks the steam and passes the values to a set of consumers, as if each consumer
+  had its own copy of the stream as input.  
+  `consumers` is an array of functions with the following signature: `stream = consumer(source)`
+  Returns a `StreamGroup` on which other operations can be chained.
+* `group = stream.parallelize(count, consumer)`  
+  Parallelizes by distributing the values to a set of  `count` identical consumers.  
+  `count` is the number of consumers that will be created.  
+  `consumer` is a function with the following signature: `stream = consumer(source)`  
+  Returns a `StreamGroup` on which other operations can be chained.  
+  Note: transformed entries may be delivered out of order.
+## StreamGroup API
+* `stream = group.dequeue()`  
+  Dequeues values in the order in which they are delivered by the streams.
+  Returns a stream on which other operations may be chained.
+* `stream = group.rr()`  
+  Dequeues values in round robin fashion.
+  Returns a stream on which other operations may be chained.
+* `stream = group.combine(fn, thisObj)`  
+  Combines the values read from the streams to produce a single value.
   `fn` is called as `fn(_, values)` where `values` is the set of values produced by 
   all the streams that are still active.  
   `fn` returns the value which will be read from the joined stream. `fn` _must_ also reset to `undefined` the `values` entries
   that it has consumed. The next `read(_)` on the joined stream will fetch these values. 
   Note that the length of the `values` array will decrease every time an input stream is exhausted.
-  Returns another stream on which other operations may be chained.
+  Returns a stream on which other operations may be chained.
