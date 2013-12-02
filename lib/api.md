@@ -43,10 +43,14 @@
   Similar to `filter` on arrays.  
   The `fn` function is called as `fn(_, elt, i)`.  
   Returns another stream on which other operations may be chained.
-* `result = stream.cut(fn, thisObj)`  
+* `result = stream.while(fn, testVal, thisObj)`  
   Cuts the stream by when the `fn` condition becomes false.  
   This is different from `filter` in that the result streams _ends_ when the condition
-  becomes false, instead of just skipping the entries. 
+  becomes false, instead of just skipping the entries.
+  The `fn` function is called as `fn(_, elt, i)`.  
+  Returns another stream on which other operations may be chained.
+* `result = stream.until(fn, testVal, thisObj)`  
+  Cuts the stream by when the `fn` condition becomes true.  
   The `fn` function is called as `fn(_, elt, i)`.  
   Returns another stream on which other operations may be chained.
 * `result = stream.limit(count)`  

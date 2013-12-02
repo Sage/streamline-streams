@@ -143,6 +143,16 @@ asyncTest("until", 1, function(_) {
 	start();
 });
 
+asyncTest("limit", 1, function(_) {
+	strictEqual(numbers().limit(5).pipe(_, arraySink()).toArray().join(','), "0,1,2,3,4");
+	start();
+});
+
+asyncTest("skip", 1, function(_) {
+	strictEqual(numbers().skip(2).limit(5).pipe(_, arraySink()).toArray().join(','), "2,3,4,5,6");
+	start();
+});
+
 /*
 //numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
 numbers().fork([
