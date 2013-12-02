@@ -86,7 +86,7 @@ function doTest(_, name, options, fn) {
 	addBufferHooks(resp.emitter);
 	fn(_, resp);
 	var last = resp.read(_);
-	strictEqual(last, undefined, "read returns undefined at end")
+	strictEqual(last, null, "read returns null at end")
 	//console.error(" ok");
 }
 

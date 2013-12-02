@@ -228,15 +228,3 @@ This option can take the following values:
 * a function. This is a hook for custom encoding detection. 
   The function is called as `fn(headers)` and returns the encoding.
 
-## Synthetic stream constructors
-
-* `st = streams.source(read)`  
-  creates a readable stream from a given read(_) function.
-* `st = streams.sink(write)`  
-  creates a writable stream by a given write(_) function.
-  `obj` must have a `write(_)` method
-## Special streams
-
-* `streams.empty`  
-  The empty stream. `empty.read(_)` returns `undefined`.
-  It is also a null sink. You can write to it but nothing happens
