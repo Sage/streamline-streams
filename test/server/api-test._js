@@ -173,11 +173,26 @@ function rand(min, max) {
 	};
 }
 
-asyncTest("parallel", 1, function(_) {
+asyncTest("parallel preserve order", 1, function(_) {
 	var t0 = Date.now();
 	strictEqual(numbers().limit(10).parallel(4, function(source) {
-		return source.map(wait(rand(0, 100))).map(pow(2));
+		return source.map(wait(rand(100, 0))).map(pow(2));
 	}).pipe(_, arraySink()).toArray().join(','), "0,1,4,9,16,25,36,49,64,81");
+	var dt = Date.now() - t0;
+	//ok(dt < 600, "elapsed: " + dt + "ms");
+	start();
+});
+
+asyncTest("parallel shuffle", 1, function(_) {
+	var t0 = Date.now();
+	strictEqual(numbers().limit(10).parallel({
+		count: 4,
+		shuffle: true,
+	}, function(source) {
+		return source.map(wait(rand(100, 0))).map(pow(2));
+	}).pipe(_, arraySink()).toArray().sort(function(i, j) {
+		return i - j;
+	}).join(','), "0,1,4,9,16,25,36,49,64,81");
 	var dt = Date.now() - t0;
 	//ok(dt < 600, "elapsed: " + dt + "ms");
 	start();
