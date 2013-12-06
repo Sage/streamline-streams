@@ -59,9 +59,6 @@
 * `result = stream.skip(count)`  
   Skips the first `count` entries of the stream.  
   Returns another stream on which other operations may be chained.
-* `result = stream.join(others, fn, thisObj)`  
-  Joins `stream` with one or more other streams. 
-  Returns a `StreamGroup` on which other operations can be chained. 
 * `group = stream.fork(consumers)`  
   Forks the steam and passes the values to a set of consumers, as if each consumer
   had its own copy of the stream as input.  
@@ -80,7 +77,7 @@
 * `stream = group.rr()`  
   Dequeues values in round robin fashion.
   Returns a stream on which other operations may be chained.
-* `stream = group.combine(fn, thisObj)`  
+* `stream = group.join(fn, thisObj)`  
   Combines the values read from the streams to produce a single value.
   `fn` is called as `fn(_, values)` where `values` is the set of values produced by 
   all the streams that are still active.  

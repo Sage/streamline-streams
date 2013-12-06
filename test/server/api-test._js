@@ -176,7 +176,7 @@ function rand(min, max) {
 asyncTest("parallel preserve order", 1, function(_) {
 	var t0 = Date.now();
 	strictEqual(numbers().limit(10).parallel(4, function(source) {
-		return source.map(wait(rand(100, 0))).map(pow(2));
+		return source.map(wait(rand(10, 10))).map(pow(2));
 	}).pipe(_, arraySink()).toArray().join(','), "0,1,4,9,16,25,36,49,64,81");
 	var dt = Date.now() - t0;
 	//ok(dt < 600, "elapsed: " + dt + "ms");
@@ -189,7 +189,7 @@ asyncTest("parallel shuffle", 1, function(_) {
 		count: 4,
 		shuffle: true,
 	}, function(source) {
-		return source.map(wait(rand(100, 0))).map(pow(2));
+		return source.map(wait(rand(10, 10))).map(pow(2));
 	}).pipe(_, arraySink()).toArray().sort(function(i, j) {
 		return i - j;
 	}).join(','), "0,1,4,9,16,25,36,49,64,81");
@@ -198,14 +198,44 @@ asyncTest("parallel shuffle", 1, function(_) {
 	start();
 });
 
-/*
-//numbers().map(pow(2)).join(numbers().map(pow(3)).limit(4)).rr().map(wait).limit(20).pipe(_, streams.console.log);
-numbers().fork([
-	function(source) { return source.map(pow(2)).limit(4); },
-	function(source) { return source.map(pow(3)); },
-]).rr().map(wait).limit(30).pipe(_, streams.console.log);
+asyncTest("fork/join limit before", 1, function(_) {
+	strictEqual(numbers().limit(10).fork([
+		function(source) { return source.map(wait(rand(20, 20))).map(pow(2)); },
+		function(source) { return source.map(wait(rand(10, 10))).map(pow(3)); },
+		], {
+			bufSize: Infinity,
+		}).join(minJoiner).pipe(_, arraySink()).toArray().join(','), "0,1,4,8,9,16,25,27,36,49,64,81,125,216,343,512,729");
+	start();
+});
 
-numbers().parallelize(5, function(source) {
-	return source.map(pow(2)).map(wait);
-}).limit(30).pipe(_, streams.console.log);
-*/
+asyncTest("fork/join limit after", 1, function(_) {
+	strictEqual(numbers().fork([
+		function(source) { return source.map(wait(rand(20, 20))).map(pow(2)); },
+		function(source) { return source.map(wait(rand(10, 10))).map(pow(3)); },
+		], {
+			bufSize: Infinity,
+		}).join(minJoiner).limit(12).pipe(_, arraySink()).toArray().join(','), "0,1,4,8,9,16,25,27,36,49,64,81");
+	start();
+});
+
+asyncTest("fork/join limit one branch", 1, function(_) {
+	strictEqual(numbers().fork([
+		function(source) { return source.map(wait(rand(20, 20))).map(pow(2)).limit(3); },
+		function(source) { return source.map(wait(rand(10, 10))).map(pow(3)); },
+		], {
+			bufSize: Infinity,
+		}).join(minJoiner).limit(10).pipe(_, arraySink()).toArray().join(','),  "0,1,4,8,27,64,125,216,343,512");
+	start();
+});
+
+asyncTest("fork slow and fast", 2, function(_) {
+	var streams = numbers().fork([
+		function(source) { return source.map(wait(rand(20, 20))).map(pow(2)); },
+		function(source) { return source.map(wait(rand(10, 10))).map(pow(3)); },
+		]).streams;
+	var f1 = streams[0].limit(10).pipe(!_, arraySink());
+	var f2 = streams[1].limit(10).pipe(!_, arraySink());
+	strictEqual(f1(_).toArray().join(','), "0,1,4,9,16,25,36,49,64,81");
+	strictEqual(f2(_).toArray().join(','), "0,1,8,27,64,125,216,343,512,729");
+	start();
+});
