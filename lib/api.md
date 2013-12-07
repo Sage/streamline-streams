@@ -85,18 +85,3 @@
   that it has consumed. The next `read(_)` on the joined stream will fetch these values. 
   Note that the length of the `values` array will decrease every time an input stream is exhausted.
   Returns a stream on which other operations may be chained.
-
-## Native node.js streams
-
-## Synthetic stream constructors
-
-* `st = streams.source(read)`  
-  creates a readable stream from a given read(_) function.
-* `st = streams.sink(write)`  
-  creates a writable stream by a given write(_) function.
-  `obj` must have a `write(_)` method
-## Special streams
-
-* `streams.empty`  
-  The empty stream. `empty.read(_)` returns `undefined`.
-  It is also a null sink. You can write to it but nothing happens
