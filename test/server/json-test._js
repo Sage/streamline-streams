@@ -1,12 +1,12 @@
 "use strict";
 QUnit.module(module.id);
-var streams = require("streamline-streams");
+var native = require("streamline-streams/lib/endpoints/native");
 var jsonTrans = require("streamline-streams/lib/transforms/json");
 
 var inputFile = require('os').tmpdir() + '/jsonInput.json';
 var outputFile = require('os').tmpdir() + '/jsonOutput.json';
 var fs = require('streamline-fs');
-var stringlets = require("streamline-streams/lib/xlets/string");
+var stringlets = require("streamline-streams/lib/endpoints/string");
 
 var mixedData = '[' + //
 '{ "firstName": "Jimy", "lastName": "Hendrix" },' + //
@@ -21,7 +21,7 @@ var mixedData = '[' + //
 
 function nativeStream(_, text) {
 	fs.writeFile(inputFile, text, "utf8", _);
-	return new streams.ReadableStream(fs.createReadStream(inputFile, {
+	return native.readable(fs.createReadStream(inputFile, {
 		encoding: "utf8"
 	}));
 }

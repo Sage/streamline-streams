@@ -1,6 +1,6 @@
 "use strict";
 
-var std = require('streamline-streams/lib/xlets').std;
+var std = require('streamline-streams/lib/endpoints').std;
 
 std.in('utf8').map(function(_, line) {
 	switch (process.argv[2]) {

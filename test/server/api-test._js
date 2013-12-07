@@ -1,12 +1,12 @@
 "use strict";
 QUnit.module(module.id);
 
-var api = require('streamline-streams/lib/api');
-var arraySink = require('streamline-streams/lib/xlets/array').sink;
+var base = require('streamline-streams/lib/endpoints/base');
+var arraySink = require('streamline-streams/lib/endpoints/array').sink;
 
 function numbers(limit) {
 	var i = 0;
-	return api.source(function read(_) {
+	return base.source(function read(_) {
 		return i >= limit ? undefined : i++;
 	});
 }
