@@ -4,31 +4,15 @@ QUnit.module(module.id);
 var buffer = require('streamline-streams/lib/endpoints/buffer');
 var multipart = require('streamline-streams/lib/transforms/multipart')
 
-function makeRequest(headers, buf) {
+var boundary = "-- my boundary --";
+
+function headers(subType) {
 		return {
-			headers: headers,
-			read: function(_, len) {
-				if (buf.length === 0) return null;
-				var end = Math.min(len, buf.length);
-				var b = buf.slice(0, end);
-				buf = buf.slice(end);
-				return b;
-			},
-			unread: function(b) {
-				buf = Buffer.concat([b, buf]);
-			},
-			readAll: function(_) {
-				return this.read(_, buf.length);
-			}
+			"content-type": "multipart/" + subType + ";atb1=val1; boundary=" + boundary + "; atb2=val2",
 		};
 	}
 
-
-asyncTest('basic multipart/form-data', 7, function(_) {
-	var boundary = "-- my boundary --";
-	var headers = {
-		"content-type": "multipart/form-data;atb1=val1; boundary=" + boundary + "; atb2=val2",
-	};
+function testStream() {
 	var parts = [{
 		headers: {
 			A: "VA1",
@@ -50,9 +34,12 @@ asyncTest('basic multipart/form-data', 7, function(_) {
 			return name + ': ' + part.headers[name]
 		}).join('\n') + '\n\n' + boundary + '\n' + part.body + '\n' + boundary + '\n';
 	}
-	var source = buffer.source(new Buffer(parts.map(formatPart).join(''), "binary"));
+	return buffer.source(new Buffer(parts.map(formatPart).join(''), "binary"));
+}
 
-	var stream = source.transform(multipart.parser(headers));
+asyncTest('basic multipart/form-data', 7, function(_) {
+	var source = testStream("form-data");
+	var stream = source.transform(multipart.parser(headers("form-data")));
 	var part = stream.read(_);
 	ok(part != null, "part != null");
 	strictEqual(part.headers.a, "VA1", "header A");
@@ -69,34 +56,8 @@ asyncTest('basic multipart/form-data', 7, function(_) {
 });
 
 asyncTest('basic multipart/mixed', 13, function(_) {
-	var boundary = "-- my boundary --";
-	var headers = {
-		"content-type": "multipart/mixed;atb1=val1; boundary=" + boundary + "; atb2=val2",
-	};
-	var parts = [{
-		headers: {
-			A: "VA1",
-			B: "VB1",
-			"Content-Type": "text/plain",
-		},
-		body: "C1",
-	}, {
-		headers: {
-			"content-type": "text/plain",
-			A: "VA2",
-			B: "VB2"
-		},
-		body: "C2",
-	}];
-
-	function formatPart(part) {
-		return Object.keys(part.headers).map(function(name) {
-			return name + ': ' + part.headers[name]
-		}).join('\n') + '\n\n' + boundary + '\n' + part.body + '\n' + boundary + '\n';
-	}
-	var source = buffer.source(new Buffer(parts.map(formatPart).join(''), "binary"));
-
-	var stream = source.transform(multipart.parser(headers));
+	var source = testStream("mixed");
+	var stream = source.transform(multipart.parser(headers("mixed")));
 	var part = stream.read(_);
 	ok(part != null, "part != null");
 	strictEqual(part.headers.a, "VA1", "header A");
@@ -119,5 +80,18 @@ asyncTest('basic multipart/mixed', 13, function(_) {
 
 	part = stream.read(_);
 	equal(part, undefined, "read next part returns undefined");
+	start();
+});
+
+asyncTest('multipart/mixed roundtrip', 2, function(_) {
+	var heads = headers("mixed");
+	var source = testStream("mixed");
+	var sink = buffer.sink();
+	source.transform(multipart.parser(heads)).transform(multipart.formatter(heads)).pipe(_, sink);
+	var result = sink.toBuffer();
+	strictEqual(result.length, 158);
+	var sink2 = buffer.sink();
+	buffer.source(result).transform(multipart.parser(heads)).transform(multipart.formatter(heads)).pipe(_, sink2);
+	strictEqual(result.toString("binary"), sink2.toBuffer().toString("binary"));
 	start();
 });
