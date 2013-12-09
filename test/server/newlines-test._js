@@ -1,7 +1,7 @@
 "use strict";
 QUnit.module(module.id);
 var newlines = require("streamline-streams/lib/transforms/newlines");
-var native = require('streamline-streams/lib/endpoints/native');
+var file = require('streamline-streams/lib/endpoints/file');
 
 var inputFile = require('os').tmpdir() + '/jsonInput.json';
 var outputFile = require('os').tmpdir() + '/jsonOutput.json';
@@ -10,9 +10,7 @@ var stringlets = require("streamline-streams/lib/endpoints/string");
 
 function nativeStream(_, text) {
 	fs.writeFile(inputFile, text, "utf8", _);
-	return native.readable(fs.createReadStream(inputFile, {
-		encoding: "utf8"
-	}));
+	return file.text.reader(inputFile);
 }
 
 asyncTest("empty", 2, function(_) {
