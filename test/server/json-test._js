@@ -1,12 +1,12 @@
 "use strict";
 QUnit.module(module.id);
-var file = require("streamline-streams/lib/endpoints/file");
+var file = require("streamline-streams/lib/devices/file");
 var jsonTrans = require("streamline-streams/lib/transforms/json");
 
 var inputFile = require('os').tmpdir() + '/jsonInput.json';
 var outputFile = require('os').tmpdir() + '/jsonOutput.json';
 var fs = require('streamline-fs');
-var stringlets = require("streamline-streams/lib/endpoints/string");
+var stringlets = require("streamline-streams/lib/devices/string");
 
 var mixedData = '[' + //
 '{ "firstName": "Jimy", "lastName": "Hendrix" },' + //
@@ -19,19 +19,19 @@ var mixedData = '[' + //
 '\n 5, 8, 13],' + //
 '\n true]';
 
-function nativeStream(_, text) {
+function nodeStream(_, text) {
 	fs.writeFile(inputFile, text, "utf8", _);
 	return file.text.reader(inputFile);
 }
 
 asyncTest("empty", 1, function(_) {
-	var stream = nativeStream(_, '[]').transform(jsonTrans.parser());
+	var stream = nodeStream(_, '[]').transform(jsonTrans.parser());
 	strictEqual(stream.read(_), undefined, "undefined");
 	start();
 });
 
-asyncTest("mixed data with native node stream", 9, function(_) {
-	var stream = nativeStream(_, mixedData);
+asyncTest("mixed data with node node stream", 9, function(_) {
+	var stream = nodeStream(_, mixedData);
 	var expected = JSON.parse(mixedData);
 	stream.transform(jsonTrans.parser()).forEach(_, function(_, elt, i) {
 		deepEqual(elt, expected[i], expected[i]);
@@ -50,7 +50,7 @@ asyncTest("fragmented read", 9, function(_) {
 
 asyncTest("roundtrip", 11, function(_) {
 	var sink = stringlets.sink();
-	nativeStream(_, mixedData).transform(jsonTrans.parser()).map(function(_, elt) {
+	nodeStream(_, mixedData).transform(jsonTrans.parser()).map(function(_, elt) {
 		return (elt && elt.lastName) ? elt.lastName : elt;
 	}).transform(jsonTrans.formatter()).pipe(_, sink);
 	var result = JSON.parse(sink.toString());

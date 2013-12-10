@@ -1,7 +1,7 @@
 "use strict";
 
 var streams = require('streamline-streams');
-var output = require('streamline.streams/lib/endpoints/console').log;
+var output = require('streamline.streams/lib/devices/console').log;
 
 function numbers() {
 	var i = 0;

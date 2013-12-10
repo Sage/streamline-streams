@@ -1,7 +1,7 @@
 "use strict";
 QUnit.module(module.id);
 
-var buffer = require('streamline-streams/lib/endpoints/buffer');
+var buffer = require('streamline-streams/lib/devices/buffer');
 var multipart = require('streamline-streams/lib/transforms/multipart')
 
 var boundary = "-- my boundary --";

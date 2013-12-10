@@ -1,8 +1,8 @@
 "use strict";
 QUnit.module(module.id);
 
-var base = require('streamline-streams/lib/endpoints/base');
-var arraySink = require('streamline-streams/lib/endpoints/array').sink;
+var base = require('streamline-streams/lib/devices/base');
+var arraySink = require('streamline-streams/lib/devices/array').sink;
 
 function numbers(limit) {
 	var i = 0;
