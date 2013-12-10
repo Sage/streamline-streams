@@ -9,7 +9,7 @@ A _simple JSON stream_ is a text stream with the following format:
 
 In other words, the whole stream is just a valid JSON array.
 
-There is no special contraint on spaces or line breaks, nor on items. Items are usually objects but they may also be simple values, arrays or even nulls. Items may or may not be separated by newlines. Any valid JSON array is a valid _simple JSON stream_.
+There is no special constraint on spaces or line breaks, nor on items. Items are usually objects but they may also be simple values, arrays or even nulls. Items may or may not be separated by newlines. Any valid JSON array is a valid _simple JSON stream_.
 
 For example the following is a valid simple JSON stream:
 
