@@ -8,5 +8,5 @@ simple streams for streamline.js
   Wrappers for node.js streams
 * [streamline-streams/lib/transforms/json](lib/transforms/json.md)  
    "Simple" JSON streams
-* [streamline-streams/lib/transforms/newlines](lib/transforms/newlines.md)  
+* [streamline-streams/lib/transforms/lines](lib/transforms/lines.md)  
    API

@@ -1,6 +1,6 @@
 "use strict";
 QUnit.module(module.id);
-var newlines = require("streamline-streams/lib/transforms/newlines");
+var lines = require("streamline-streams/lib/transforms/lines");
 var file = require('streamline-streams/lib/devices/file');
 
 var inputFile = require('os').tmpdir() + '/jsonInput.json';
@@ -14,14 +14,14 @@ function nodeStream(_, text) {
 }
 
 asyncTest("empty", 2, function(_) {
-	var stream = nodeStream(_, '').transform(newlines.parser());
+	var stream = nodeStream(_, '').transform(lines.parser());
 	strictEqual(stream.read(_), '', "empty line");
 	strictEqual(stream.read(_), undefined, "undefined");
 	start();
 });
 
 asyncTest("only newline", 3, function(_) {
-	var stream = nodeStream(_, '\n').transform(newlines.parser());
+	var stream = nodeStream(_, '\n').transform(lines.parser());
 	strictEqual(stream.read(_), '', "empty line");
 	strictEqual(stream.read(_), '', "empty line");
 	strictEqual(stream.read(_), undefined, "undefined");
@@ -29,7 +29,7 @@ asyncTest("only newline", 3, function(_) {
 });
 
 asyncTest("mixed", 5, function(_) {
-	var stream = nodeStream(_, 'abc\n\ndef\nghi').transform(newlines.parser());
+	var stream = nodeStream(_, 'abc\n\ndef\nghi').transform(lines.parser());
 	strictEqual(stream.read(_), 'abc', 'abc');
 	strictEqual(stream.read(_), '', "empty line");
 	strictEqual(stream.read(_), 'def', 'def');
@@ -41,7 +41,7 @@ asyncTest("mixed", 5, function(_) {
 asyncTest("roundtrip", 1, function(_) {
 	var writer = string.writer();
 	var text = 'abc\n\ndef\nghi';
-	string.reader(text, 2).transform(newlines.parser()).transform(newlines.formatter()).pipe(_, writer);
+	string.reader(text, 2).transform(lines.parser()).transform(lines.formatter()).pipe(_, writer);
 	strictEqual(writer.toString(), text, text);
 	start();
 });

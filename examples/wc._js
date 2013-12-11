@@ -3,7 +3,7 @@
 var fs = require('streamline-fs');
 var path = require('path');
 var streams = require('streamline-streams');
-var newlines = require('streamline-streams/lib/transforms/newlines');
+var lines = require('streamline-streams/lib/transforms/lines');
 
 var root = process.argv[2] || '.';
 
@@ -12,7 +12,7 @@ fs.readdir(root, _).filter_(_, function(_, name) {
 }).forEach_(_, function(_, name) {
 	var res = new streams.ReadableStream(fs.createReadStream(root + '/' + name, {
 		encoding: "utf8"
-	})).transform(newlines.parser()).reduce(_, function(_, r, line) {
+	})).transform(lines.parser()).reduce(_, function(_, r, line) {
 		r.lines++;
 		r.words += line.split(/\S+/).length - 1;
 		r.chars += line.length + 1;

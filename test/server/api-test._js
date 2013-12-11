@@ -1,12 +1,12 @@
 "use strict";
 QUnit.module(module.id);
 
-var base = require('streamline-streams/lib/devices/base');
+var generic = require('streamline-streams/lib/devices/generic');
 var arraySink = require('streamline-streams/lib/devices/array').writer;
 
 function numbers(limit) {
 	var i = 0;
-	return base.reader(function read(_) {
+	return generic.reader(function read(_) {
 		return i >= limit ? undefined : i++;
 	});
 }

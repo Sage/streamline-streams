@@ -35,7 +35,7 @@ This API provides methods like `transform`, `pipe`, `limit`, `buffer`, ... that 
 The `lib/transform` directory contains standard transforms that you can use with streamline streams:
 
 * [`json-transform`](lib/stransforms/json.md): transforms between a JSON text stream and a stream of values.
-* [`newlines`](lib/stransforms/newlines.md): transforms between a plain text stream and a stream of lines.
+* [`lines`](lib/stransforms/lines.md): transforms between a plain text stream and a stream of lines.
 
 For example, you can read from a JSON file, filter its entries and write the output to another JSON file with:
 
