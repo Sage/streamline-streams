@@ -6,7 +6,7 @@ var file = require('streamline-streams/lib/devices/file');
 var inputFile = require('os').tmpdir() + '/jsonInput.json';
 var outputFile = require('os').tmpdir() + '/jsonOutput.json';
 var fs = require('streamline-fs');
-var stringlets = require("streamline-streams/lib/devices/string");
+var string = require("streamline-streams/lib/devices/string");
 
 function nodeStream(_, text) {
 	fs.writeFile(inputFile, text, "utf8", _);
@@ -39,9 +39,9 @@ asyncTest("mixed", 5, function(_) {
 });
 
 asyncTest("roundtrip", 1, function(_) {
-	var sink = stringlets.sink();
+	var writer = string.writer();
 	var text = 'abc\n\ndef\nghi';
-	stringlets.source(text, 2).transform(newlines.parser()).transform(newlines.formatter()).pipe(_, sink);
-	strictEqual(sink.toString(), text, text);
+	string.reader(text, 2).transform(newlines.parser()).transform(newlines.formatter()).pipe(_, writer);
+	strictEqual(writer.toString(), text, text);
 	start();
 });

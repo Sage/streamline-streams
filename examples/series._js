@@ -5,7 +5,7 @@ var output = require('streamline.streams/lib/devices/console').log;
 
 function numbers() {
 	var i = 0;
-	return streams.source(function read(_) {
+	return streams.reader(function read(_) {
 		return i++;
 	});
 }

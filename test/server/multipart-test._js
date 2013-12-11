@@ -34,7 +34,7 @@ function testStream() {
 			return name + ': ' + part.headers[name]
 		}).join('\n') + '\n\n' + boundary + '\n' + part.body + '\n' + boundary + '\n';
 	}
-	return buffer.source(new Buffer(parts.map(formatPart).join(''), "binary"));
+	return buffer.reader(new Buffer(parts.map(formatPart).join(''), "binary"));
 }
 
 asyncTest('basic multipart/form-data', 7, function(_) {
@@ -86,12 +86,12 @@ asyncTest('basic multipart/mixed', 13, function(_) {
 asyncTest('multipart/mixed roundtrip', 2, function(_) {
 	var heads = headers("mixed");
 	var source = testStream("mixed");
-	var sink = buffer.sink();
-	source.transform(multipart.parser(heads)).transform(multipart.formatter(heads)).pipe(_, sink);
-	var result = sink.toBuffer();
+	var writer = buffer.writer();
+	source.transform(multipart.parser(heads)).transform(multipart.formatter(heads)).pipe(_, writer);
+	var result = writer.toBuffer();
 	strictEqual(result.length, 158);
-	var sink2 = buffer.sink();
-	buffer.source(result).transform(multipart.parser(heads)).transform(multipart.formatter(heads)).pipe(_, sink2);
-	strictEqual(result.toString("binary"), sink2.toBuffer().toString("binary"));
+	var writer2 = buffer.writer();
+	buffer.reader(result).transform(multipart.parser(heads)).transform(multipart.formatter(heads)).pipe(_, writer2);
+	strictEqual(result.toString("binary"), writer2.toBuffer().toString("binary"));
 	start();
 });

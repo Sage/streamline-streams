@@ -6,7 +6,7 @@ var jsonTrans = require("streamline-streams/lib/transforms/json");
 var inputFile = require('os').tmpdir() + '/jsonInput.json';
 var outputFile = require('os').tmpdir() + '/jsonOutput.json';
 var fs = require('streamline-fs');
-var stringlets = require("streamline-streams/lib/devices/string");
+var string = require("streamline-streams/lib/devices/string");
 
 var mixedData = '[' + //
 '{ "firstName": "Jimy", "lastName": "Hendrix" },' + //
@@ -40,7 +40,7 @@ asyncTest("mixed data with node node stream", 9, function(_) {
 });
 
 asyncTest("fragmented read", 9, function(_) {
-	var stream = stringlets.source(mixedData, 2).transform(jsonTrans.parser());
+	var stream = string.reader(mixedData, 2).transform(jsonTrans.parser());
 	var expected = JSON.parse(mixedData);
 	stream.forEach(_, function(_, elt, i) {
 		deepEqual(elt, expected[i], expected[i]);
@@ -49,11 +49,11 @@ asyncTest("fragmented read", 9, function(_) {
 });
 
 asyncTest("roundtrip", 11, function(_) {
-	var sink = stringlets.sink();
+	var writer = string.writer();
 	nodeStream(_, mixedData).transform(jsonTrans.parser()).map(function(_, elt) {
 		return (elt && elt.lastName) ? elt.lastName : elt;
-	}).transform(jsonTrans.formatter()).pipe(_, sink);
-	var result = JSON.parse(sink.toString());
+	}).transform(jsonTrans.formatter()).pipe(_, writer);
+	var result = JSON.parse(writer.toString());
 	var expected = JSON.parse(mixedData).map(function(elt) {
 		return (elt && elt.lastName) ? elt.lastName : elt;
 	});

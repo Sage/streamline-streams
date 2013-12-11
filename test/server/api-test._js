@@ -2,11 +2,11 @@
 QUnit.module(module.id);
 
 var base = require('streamline-streams/lib/devices/base');
-var arraySink = require('streamline-streams/lib/devices/array').sink;
+var arraySink = require('streamline-streams/lib/devices/array').writer;
 
 function numbers(limit) {
 	var i = 0;
-	return base.source(function read(_) {
+	return base.reader(function read(_) {
 		return i >= limit ? undefined : i++;
 	});
 }

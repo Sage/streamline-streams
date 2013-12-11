@@ -4,7 +4,7 @@
   Adds the high-level API to an object. 
   Usually this object is a prototype but it may be any object with a `read(_)` method.  
   You do not need to call this function if you use streamline wrappers around node.js streams, or streams
-  created with `streams.source(readFn)` because the high-level API is already in place.  
+  created with `streams.reader(readFn)` because the high-level API is already in place.  
   Returns `proto` for convenience.
 * `count = stream.forEach(_, fn, thisObj)`  
   Similar to `forEach` on arrays.  
