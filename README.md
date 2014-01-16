@@ -2,7 +2,7 @@
 [ez-streams](https://github.com/bjouhier/ez-streams) package which provide a much richer API.
 
 You can nevertheless use this module directly if you are only interested by the low level wrappers
-around node stream.
+around node streams.
 
 This module provides:
 
