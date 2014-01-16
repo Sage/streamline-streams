@@ -1,5 +1,5 @@
 **Warning**: this module is the original stream API for streamline.js. It is now superseeded by the 
-[ez-streams](https://github.com/bjouhier/ez-streams) package which provide a much richer API.
+[ez-streams](https://github.com/Sage/ez-streams) package which provide a much richer API.
 
 You can nevertheless use this module directly if you are only interested by the low level wrappers
 around node streams.
