@@ -1,4 +1,10 @@
-This module provides _stream wrappers_ for streamline.js. It contains:
+Warning: this module is the original stream API for streamline.js. It is now superseeded by the 
+[ez-streams](https://github.com/bjouhier/ez-streams) package which provide a much richer API.
+
+You can nevertheless use this module directly if you are only interested by the low level wrappers
+around node stream.
+
+This module provides:
 
 * a generic `ReadableStream` wrapper with an asynchronous `stream.read(_[, len])` method.
 * a generic `WritableStream` wrapper with an asynchronous `stream.write(_, buf[, encoding])` method.
