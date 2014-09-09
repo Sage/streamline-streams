@@ -1,8 +1,6 @@
 
 # Wrappers for node.js streams
 
-The `streams` module contains _pull mode_ wrappers around node streams.
-
 These wrappers implement a _pull style_ API. 
 For readable streams, instead of having the stream _push_ the data to its consumer by emitting `data` and `end` events, 
 the wrapper lets the consumer _pull_ the data from the stream by calling asynchronous `read` methods.
