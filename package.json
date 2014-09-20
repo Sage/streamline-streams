@@ -1,7 +1,7 @@
 {
   "name": "streamline-streams",
   "description": "simple streams for streamline.js",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "repository": {
     "type": "git",
     "url": "git://github.com/Sage/streamline-streams.git"
