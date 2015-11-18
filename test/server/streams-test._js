@@ -1,6 +1,6 @@
 "use strict";
 
-var streams = require('streamline-streams');
+var streams = require('../..');
 
 var bufSize = 100;
 var bufCount = 3;
