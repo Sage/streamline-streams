@@ -1,13 +1,33 @@
 {
   "name": "streamline-streams",
   "description": "simple streams for streamline.js",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/Sage/streamline-streams.git"
   },
-  "engines": { "node": ">=0.10.8" },
-  "dependencies": {},
-  "author": "Bruno Jouhier",
-  "main": "index.js"
+  "bugs": {
+    "url": "https://github.com/Sage/streamline-streams/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Bruno Jouhier"
+  },
+  "engines": {
+    "node": ">=0.10.8"
+  },
+  "dependencies": {
+    "streamline-runtime": "^1.0.13"
+  },
+  "devDependencies": {
+    "babel-plugin-streamline": "^1.0.8",
+    "streamline-helpers": "^1.0.0"
+  },
+  "scripts": {
+    "prepublish": "node build.js || nodejs build.js",
+    "test": "node test-callbacks"
+  },
+  "main": "index.js",
+  "readmeFilename": "README.md",
+  "homepage": "https://github.com/Sage/streamline-streams#readme"
 }

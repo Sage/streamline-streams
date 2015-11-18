@@ -22,8 +22,8 @@
 /// For a simple example of this API in action, 
 /// see the [google client example](../../../examples/streams/googleClient._js)
 var parseUrl = require("url").parse;
-var globals = require('streamline/lib/globals');
-var flows = require('streamline/lib/util/flows');
+var globals = require('streamline-runtime').globals;
+var flows = require('streamline-runtime').flows;
 var os = require("os");
 
 function wrapProperties(constr, writable, props) {
@@ -95,7 +95,7 @@ function Wrapper(emitter) {
 	}
 	var _onClose = trackClose;
 
-	self.close = _(function(callback) {
+	self.close = function(callback) {
 			if (closed) return callback();
 			var close = emitter.end || emitter.close || emitter.destroySoon;
 			if (typeof close !== "function") return callback();
@@ -103,12 +103,13 @@ function Wrapper(emitter) {
 				closed = true;
 				_onClose = null;
 				callback(err);
+				callback = null;
 			};
 			if (self.doesNotEmitClose) {
 				emitter.emit("close");
 			}
 			close.call(emitter);
-		}, 0);
+		};
 	/// * `emitter = wrapper.emitter`  
 	///    returns the underlying emitter. The emitter stream can be used to attach additional observers.
 	self.emitter === undefined && Object.defineProperty(self, "emitter", {
@@ -127,9 +128,7 @@ function Wrapper(emitter) {
 	///    unwraps and returns the underlying emitter.  
 	///    The wrapper should not be used after this call.
 	self.unwrap = function() {
-		emitter.events.forEach(function(event) {
-			emitter.removeAllListeners(event);
-		});
+		emitter.removeAllListeners();
 		closed = true;
 		return emitter;
 	};
@@ -185,7 +184,7 @@ function ReadableStream(emitter, options) {
 
 	var _onData = trackData;
 
-	var readChunk = _(function(callback) {
+	var readChunk = function(callback) {
 		if (_chunks.length > 0) {
 			var chunk = _chunks.splice(0, 1)[0];
 			_current -= chunk.length;
@@ -210,8 +209,9 @@ function ReadableStream(emitter, options) {
 			else if (!chunk) _done = true;
 			_onData = trackData; // restore it
 			callback(err, chunk);
+			callback = null;
 		};
-	}, 0);
+	};
 
 	function concat(chunks, total) {
 		if (_encoding) return chunks.join('');
@@ -323,12 +323,13 @@ function WritableStream(emitter, options) {
 		else _error = err;
 	});
 
-	var _drain = _(function(callback) {
+	var _drain = function(callback) {
 		_onDrain = function(err) {
 			_onDrain = null;
 			callback(err);
+			callback = null;
 		};
-	}, 0);
+	};
 
 	/// * `stream.write(_, data[, enc])`  
 	///   Writes the data.  
@@ -500,7 +501,7 @@ function Server(emitter) {
 	var self = this;
 	Wrapper.call(self, emitter);
 
-	self.listen = _(function(callback, args) {
+	self.listen = function(callback, args) {
 		if (self.closed) throw new Error("cannot listen: server is closed");
 		args = Array.prototype.slice.call(arguments, 1);
 			function reply(err, result) {
@@ -517,7 +518,7 @@ function Server(emitter) {
 			});
 			emitter.on('error', reply);
 			emitter.listen.apply(emitter, args);
-	}, 0);
+	};
 }
 Server.prototype = Object.create(Wrapper.prototype);
 
@@ -542,16 +543,18 @@ exports.createHttpServer = function(requestListener, options) {
 function HttpServer(requestListener, options) {
 	var self = this;
 	options = _fixHttpServerOptions(options);
-	var emitter = options.createServer(globals.withContext(function(request, response) {
-		return requestListener(new HttpServerRequest(request, options), new HttpServerResponse(response, options), _ >> function(err) {
-			if (err) {
-				response.writeHead(500, {
-					"Content-Type": "text/plain"
-				});
-				response.end(err.message + "\n" + err.stack);
-			}
-		});
-	}));
+	var emitter = options.createServer(function(request, response) {
+		flows.withContext(function() {
+			requestListener(new HttpServerRequest(request, options), new HttpServerResponse(response, options), function(err) {
+				if (err) {
+					response.writeHead(500, {
+						"Content-Type": "text/plain"
+					});
+					response.end(err.message + "\n" + err.stack);
+				}
+			});
+		})();
+	});
 	Server.call(self, emitter);
 }
 
@@ -728,13 +731,14 @@ function HttpClientRequest(options) {
 		var _onResponse = trackResponse;
 		/// * `response = request.response(_)`  
 		///    returns the response. 
-		self.response = _(function(callback) {
+		self.response = function(callback) {
 				if (_done) return callback(_error, _response);
 				else _onResponse = function(err, resp) {
 					_done = true;
 					callback(err, resp);
+					callback = null;
 				};
-			}, 0);
+			};
 	}
 
 	if (!options.proxyAuthenticate && !options.isHttps) _init();
@@ -757,11 +761,13 @@ function HttpClientRequest(options) {
 					//
 					_init();
 					callback(null, self);
+					callback = null;
 				}).on('error', function(err) {
 					callback(err);
+					callback = null;
 				}).end();
 				return self;
-			})(~_);
+			})(_);
 		} else //
 			if (options.proxyAuthenticate) {
 				options.proxyAuthenticate(_, options);
@@ -862,13 +868,14 @@ function NetClient(options, args) {
 
 	/// * `stream = client.connect(_)`  
 	///    connects the client and returns a network stream.
-	self.connect = _(function(callback) {
+	self.connect = function(callback) {
 			if (_done) return callback(_error, new NetStream(_connection, options));
 			else _onConnect = function(err) {
 				_done = true;
 				callback(err, new NetStream(_connection, options));
+				callback = null;
 			};
-		}, 0);
+		};
 }
 
 /// 
@@ -897,11 +904,13 @@ function NetServer(serverOptions, connectionListener, streamOptions) {
 		serverOptions = {};
 	}
 	net = net || require("net");
-	var emitter = net.createServer(serverOptions, globals.withContext(function(connection) {
-		connectionListener(new NetStream(connection, streamOptions || {}), _ >> function(err) {
-			if (err) throw err;
-		});
-	}));
+	var emitter = net.createServer(serverOptions, function(connection) {
+		flows.withContext(function() {
+			connectionListener(new NetStream(connection, streamOptions || {}), function(err) {
+				if (err) throw err;
+			});
+		})();
+	});
 	Server.call(self, emitter);
 }
 NetServer.prototype = Object.create(Server.prototype);

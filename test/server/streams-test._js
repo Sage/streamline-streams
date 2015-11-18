@@ -1,6 +1,6 @@
 "use strict";
 
-var streams = require('streamline/lib/streams/streams');
+var streams = require('streamline-streams');
 
 var bufSize = 100;
 var bufCount = 3;
@@ -35,14 +35,7 @@ var paused = 0,
 var doStop = false;
 
 QUnit.module(module.id, {
-	setup: function() {},
-	teardown: function() {
-		if (doStop) {
-			setTimeout(function() {
-				process.kill(process.pid);
-			}, 0)
-		}
-	}
+	setup: function() {}
 });
 
 asyncTest("start test server", 1, function(_){
@@ -55,7 +48,7 @@ asyncTest("start test server", 1, function(_){
 		})
 		for (var i = 0; i < bufCount; i++) {
 			res.write(_, makeBuffer(i));
-			process.nextTick(~_);
+			process.nextTick(_);
 		}
 		res.end();
 	}).listen(_, 1337, "127.0.0.1");
@@ -91,7 +84,7 @@ function doTest(_, name, options, fn) {
 }
 
 function dot(_) {
-	process.nextTick(~_);
+	process.nextTick(_);
 	//process.stderr.write(".");
 }
 

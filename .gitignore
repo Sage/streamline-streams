@@ -1,1 +1,4 @@
 *.testlog
+/node_modules/
+/lib/
+/test-callbacks/

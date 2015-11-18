@@ -2,5 +2,5 @@
 
 simple streams for streamline.js
 
-* [streamline-streams/lib/streams](lib/streams.md)  
+* [streamline-streams/src/streams](src/streams.md)  
   Wrappers for node.js streams
