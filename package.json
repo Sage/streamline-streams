@@ -1,7 +1,7 @@
 {
   "name": "streamline-streams",
   "description": "simple streams for streamline.js",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/Sage/streamline-streams.git"
@@ -20,8 +20,9 @@
     "streamline-runtime": "^1.0.13"
   },
   "devDependencies": {
-    "babel-plugin-streamline": "^1.0.8",
-    "streamline-helpers": "^1.0.0"
+    "babel-plugin-streamline": "^2.0.0",
+    "babel-preset-es2015": "^6.3.13",
+    "streamline-helpers": "^2.0.0"
   },
   "scripts": {
     "prepublish": "node build.js || nodejs build.js",
